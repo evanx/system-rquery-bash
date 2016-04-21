@@ -4,7 +4,7 @@ set -u -e
 hour=`date +%H`
 minute=`date +%M`
 
-serviceUrl=${serviceUrl:='https://redishub.com/rquery'}
+serviceUrl=${serviceUrl:='http://redishub.com/rquery'}
 keyspace=${keyspace:=$USER}
 hostKey=host:`hostname -s`
 hourlyMinute=${hourlyMinute:=0}
