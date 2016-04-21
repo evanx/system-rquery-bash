@@ -5,7 +5,7 @@ hour=`date +%H`
 minute=`date +%M`
 
 serviceUrl=${serviceUrl:='https://redishub.com/rquery'}
-keyspace=${keyspace:="$USER"}
+keyspace=${keyspace:=$USER}
 hostKey=host:`hostname -s`
 hourlyMinute=${hourlyMinute:=0}
 dailyHour=${dailyHour:=0}
