@@ -4,9 +4,11 @@ set -u -e
 hour=`date +%H`
 minute=`date +%M`
 
-serviceUrl='https://redishub.com/rquery'
-keyspace=$USER
+serviceUrl=${serviceUrl:='https://redishub.com/rquery'}
+keyspace=${keyspace:="$USER"}
 hostKey=host:`hostname -s`
+hourlyMinute=${hourlyMinute:=0}
+dailyHour=${dailyHour:=0}
 
 echo hour $hour
 echo minute $minute
@@ -23,6 +25,7 @@ c1curl() {
 }
 
 c0state() {
+  c1curl keys
   c1curl hgetall/$hostKey
 }
 
@@ -49,9 +52,9 @@ c0daily() {
 
 
 c0cron() {
-  if [ -n "$hourlyMinute" -a $minute -eq "$hourlyMinute" ] 
+  if [ -n "$hourlyMinute" -a $hourlyMinute -gt 0 -a $minute -eq "$hourlyMinute" ] 
   then
-    if [ -n "$dailyHour" -a $hour -eq "$dailyHour" ] 
+    if [ -n "$dailyHour" -a $dailyHour -gt 0 -a $hour -eq "$dailyHour" ] 
     then
       c0daily
     else
