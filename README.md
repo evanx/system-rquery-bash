@@ -40,7 +40,7 @@ where you must specify your keyspace, i.e. substitute `MYKEYSPACE` for your keys
 
 You can check your keyspace:
 ```shell
-curl -s redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
+curl -s http://redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
 ```
 ```json
 [
@@ -49,7 +49,7 @@ curl -s redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
 ```
 and a specific host:
 ```shell
-curl -s redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s` | python -mjson.tool
+curl -s https://redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s` | python -mjson.tool
 ```
 
 ```json
