@@ -47,6 +47,13 @@ and a specific host:
 curl -s redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s` | python -mjson.tool
 ```
 
+```json
+{
+    "cpuload": "1.23",
+    "diskspace": "19"
+}
+```
+
 ### Related
 
 See my Node HTTP Redis service: https://github.com/evanx/rquery
