@@ -4,11 +4,14 @@ set -u -e
 hour=`date +%H`
 minute=`date +%M`
 
-serviceUrl=${serviceUrl:='http://redishub.com/rquery'}
+serviceUrl=${serviceUrl:='https://redishub.com/rquery'}
 keyspace=${keyspace:=$USER}
 hostKey=host:`hostname -s`
 hourlyMinute=${hourlyMinute:=0}
 dailyHour=${dailyHour:=0}
+timeString=`date -Iseconds`
+hostHashNumber=`hostname -s | md5sum | sed 's/[^0-9]//g'`
+hostDelay=`echo $hostHashNumber % 55 | bc`
 
 echo hour $hour
 echo minute $minute
@@ -17,11 +20,21 @@ echo dailyHour $dailyHour
 echo serviceUrl $serviceUrl
 echo keyspace $keyspace
 echo hostKey $hostKey
+echo hostDelay $hostDelay 
+echo timeString $timeString
 
 c1curl() {
-  url=$serviceUrl/ks/$keyspace/$1?quiet
+  url=$serviceUrl/ks/$keyspace/$1
   echo url $url 
   curl -s -k $url | python -mjson.tool
+}
+
+c1curlq() {
+  c1curl $1?quiet
+}
+
+c1curlp() {
+  c1curl $1?nplain
 }
 
 c0state() {
@@ -30,7 +43,7 @@ c0state() {
 }
 
 c2hset() {
-  c1curl hset/$hostKey/$1/$2
+  c1curlp hset/$hostKey/$1/$2
 }
 
 c0minutely() {
@@ -55,6 +68,8 @@ c0daily() {
 
 
 c0cron() {
+  echo "sleep $hostDelay"
+  sleep $hostDelay
   if [ -n "$hourlyMinute" -a $hourlyMinute -gt 0 -a $minute -eq "$hourlyMinute" ] 
   then
     if [ -n "$dailyHour" -a $dailyHour -gt 0 -a $hour -eq "$dailyHour" ] 

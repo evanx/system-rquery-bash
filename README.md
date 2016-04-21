@@ -34,13 +34,15 @@ git clone https://github.com/evanx/system-rquery-bash
 
 You can add this to your cron as follows:
 ```shell
-* * * * * keyspace=MYKEYSPACE hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
+* * * * * serviceUrl=http://redishub.com/rquery keyspace=MYKEYSPACE hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
 ```
 where you must specify your keyspace, i.e. substitute `MYKEYSPACE` for your keyspace for your hosts.
 
+In the example above, we have specified an HTTP `serviceUrl` for RedisHub, i.e. not SSL. This is insecure and not recommended. Nevertheless it be might be required if your system does not validate LetsEncrypt.org certs, i.e. its SSL subsystem is out of date.
+
 You can check your keyspace:
 ```shell
-curl -s http://redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
+curl -s https://redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
 ```
 ```json
 [
