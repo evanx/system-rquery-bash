@@ -1,7 +1,18 @@
 
 ## system-rquery-bash
 
-Push system metrics into rquery e.g. redishub.com
+Push system metrics into an rquery instance e.g. redishub.com by default.
+
+Currently only diskpace and load average are pushed, for illustration.
+
+While the intended purpose is for custom monitoring and alerting, that is out of scope of this service.
+
+
+### Related
+
+See my Node HTTP Redis service: https://github.com/evanx/rquery
+
+This service is deployed for public use at: https://redishub.com
 
 
 ### Status
@@ -28,12 +39,18 @@ You can add this to your cron as follows:
 ```
 where you must specify your keyspace, i.e. substitute `MYKEYSPACE` for your keyspace for your hosts.
 
-You can check your keyspace 
+You can check your keyspace:
+```shell
+curl -s redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
+```
+and a specific host:
 ```shell
 curl -s redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s` | python -mjson.tool
 ```
 
 ### Related
+
+See my Node HTTP Redis service: https://github.com/evanx/rquery
 
 Related projects and further plans: https://github.com/evanx/mpush-redis/blob/master/related.md
 
