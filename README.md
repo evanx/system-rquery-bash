@@ -7,8 +7,7 @@ Currently only diskpace and load average are pushed, for illustration.
 
 While the intended purpose is for custom monitoring and alerting, that is out of scope of this service.
 
-
-### Related
+#### jquery
 
 See my Node HTTP Redis service: https://github.com/evanx/rquery
 
