@@ -21,7 +21,7 @@ echo hostKey $hostKey
 c1curl() {
   url=$serviceUrl/ks/$keyspace/$1?quiet
   echo url $url 
-  curl -s $url | python -mjson.tool
+  curl -s -k $url | python -mjson.tool
 }
 
 c0state() {
