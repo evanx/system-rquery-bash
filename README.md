@@ -24,7 +24,12 @@ git clone https://github.com/evanx/system-rquery-bash
 
 You can add this to your cron as follows:
 ```shell
-* * * * * hourlyMinute=42 dailyHour=3 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
+* * * * * keyspace=mykeyspace hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
+```
+
+You can check your keyspace 
+```shell
+echo curl -s redishub.com/rquery/ks/$USER/hgetall/host:`hostname -s`
 ```
 
 ### Related
