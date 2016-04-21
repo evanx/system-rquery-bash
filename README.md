@@ -42,6 +42,11 @@ You can check your keyspace:
 ```shell
 curl -s redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
 ```
+```json
+[
+    "host:eowyn"
+]
+```
 and a specific host:
 ```shell
 curl -s redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s` | python -mjson.tool
