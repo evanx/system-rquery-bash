@@ -4,18 +4,30 @@ set -u -e
 hour=`date +%H`
 minute=`date +%M`
 
+serviceUrl='https://redishub.com/rquery'
+keyspace=$USER
+hostKey=host:`hostname -s`
+
 echo hour $hour
 echo minute $minute
 echo hourlyMinute $hourlyMinute
 echo dailyHour $dailyHour 
+echo serviceUrl $serviceUrl
+echo keyspace $keyspace
+echo hostKey $hostKey
 
-c2hset() {
-  serviceUrl='https://redishub.com/rquery'
-  keyspace=$USER
-  key=host:`hostname -s`
-  url=$serviceUrl/ks/$keyspace/hset/key/$1/$2?quiet
+c1curl() {
+  url=$serviceUrl/ks/$keyspace/$1?quiet
   echo url $url 
   curl -s $url | python -mjson.tool
+}
+
+c0state() {
+  c1curl hgetall/$hostKey
+}
+
+c2hset() {
+  c1curl hset/$hostKey/$1/$2
 }
 
 c0minutely() {
@@ -25,7 +37,6 @@ c0minutely() {
   then
     c2hset redismegs `redis-cli info | grep '^used_memory:' | cut -d':' -f2`
   fi
-
 }
 
 c0hourly() {
@@ -49,6 +60,7 @@ c0cron() {
   else
     c0minutely
   fi
+  c0state
 }
 
 if [ $# -ge 1 ]
