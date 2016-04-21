@@ -34,6 +34,8 @@ c2hset() {
 }
 
 c0minutely() {
+  c2hset hour $hour
+  c2hset minute $minute
   c2hset diskspace `df -h | grep '/$' | sed 's/\s\s*/ /g' | cut -d' ' -f5 | sed 's/\W//g'`
   c2hset cpuload `cat /proc/loadavg | cut -d' ' -f1`
   if which redis-cli >/dev/null && redis-cli info | grep -q '^used_memory:[0-9]*$'
