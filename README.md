@@ -24,12 +24,14 @@ git clone https://github.com/evanx/system-rquery-bash
 
 You can add this to your cron as follows:
 ```shell
-* * * * * keyspace=mykeyspace hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
+* * * * * keyspace=MYKEYSPACE hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
 ```
+
+where you must specify your keyspace, i.e. substitute `MYKEYSPACE` for your keyspace for your hosts.
 
 You can check your keyspace 
 ```shell
-echo curl -s redishub.com/rquery/ks/$USER/hgetall/host:`hostname -s`
+echo curl -s redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s`
 ```
 
 ### Related
