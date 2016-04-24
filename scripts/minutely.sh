@@ -43,6 +43,7 @@ c0minutely() {
   then
     c2hset redismegs `redis-cli info | grep '^used_memory:' | cut -d':' -f2`
   fi
+  echo `date -Iseconds`
 }
 
 c0hourly() {
