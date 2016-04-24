@@ -24,7 +24,7 @@ echo hostDelay $hostDelay
 echo timeString $timeString
 
 c1curl() {
-  url=$rquery/$uri/$1
+  url=$rquery/$1
   echo url $url 
   curl -s -k $url | python -mjson.tool
 }
