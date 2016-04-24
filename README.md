@@ -1,11 +1,17 @@
 
 ## system-rquery-bash
 
-Push system metrics into an rquery instance e.g. redishub.com by default.
+Push system metrics into a Redis-based "rquery" instance via the cron.
 
-Currently only diskpace and load average are pushed, for illustration.
+Currently only diskpace and load average are pushed, for illustration:
+```shell
+  hset diskspace `df -h | grep '/$' | sed 's/\s\s*/ /g' | cut -d' ' -f5 | sed 's/\W//g'`
+  hset cpuload `cat /proc/loadavg | cut -d' ' -f1`
+```
+which saves these metrics in an online Redis service, viz. `https://redishub.com/rquery` by default.
 
-While the intended purpose is for custom monitoring and alerting, that is out of scope of this service.
+The intended purpose is for custom monitoring and alerting. However that functionality will be provided by other microservices, i.e. to aggregate and monitor the metrics of all hosts pushed by this service.
+
 
 #### rquery
 
@@ -32,33 +38,45 @@ git clone https://github.com/evanx/system-rquery-bash
 
 ### Usage
 
-You can add this to your cron as follows:
+You can add this to your crontab as follows:
 ```shell
-* * * * * serviceUrl=http://redishub.com/rquery keyspace=MYKEYSPACE hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
+rquery=http://redishub.com/rquery/$keyspace/$rtoken
+* * * * * hourlyMinute=0 dailyHour=0 ~/system-rquery-bash/bin/minutely.sh cron >> ~/tmp/cron.rquery.log 2>&1
 ```
-where you must specify your keyspace, i.e. substitute `MYKEYSPACE` for your keyspace for your hosts.
+where you must substitute your chosen `keyspace` and its access `token.` Otherwise by default the `rquery` URL is read from `~/.system-rquery-url`
 
-In the example above, we have specified an HTTP `serviceUrl` for RedisHub, i.e. not SSL. This is insecure and not recommended. Nevertheless it be might be required if your system does not validate LetsEncrypt.org certs, i.e. its SSL subsystem is out of date.
+For example, a `token` is generated via: 
+```shell
+curl -s https://cli.redishub.com/rquery/gentoken
+```
+where this is a 10 byte random number encoded in Base32.
+
+Then your chosen keyspace is registered via: 
+```shell
+curl -s https://cli.redishub.com/rquery/kt/$keyspace/$token/register/github.com/$ghuser
+```
+where we specify our Github username.
+
+Note that the `keyspace` is globally unique, and so you should prefix it e.g. with your Github username.
 
 You can check your keyspace:
 ```shell
-curl -s https://redishub.com/rquery/ks/MYKEYSPACE/keys | python -mjson.tool
+rquery=`cat ~/.system-rquery-url`
+curl -s $rquery/keys 
 ```
 ```json
-[
-    "host:eowyn"
-]
+hosts
+host:eowyn
+host:faramir
 ```
 and a specific host:
 ```shell
-curl -s https://redishub.com/rquery/ks/MYKEYSPACE/hgetall/host:`hostname -s` | python -mjson.tool
+curl -s $rquery/hgetall/host:`hostname -s` | python -mjson.tool
 ```
 
 ```json
-{
-    "cpuload": "1.23",
-    "diskspace": "19"
-}
+cpuload=1.23
+diskspace=19
 ```
 
 ### Related

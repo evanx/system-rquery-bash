@@ -4,7 +4,7 @@ set -u -e
 hour=`date +%H`
 minute=`date +%M`
 
-serviceUrl=${serviceUrl:='https://redishub.com/rquery'}
+rquery=${rquery:=`cat ~/.system-rquery-url`}
 keyspace=${keyspace:=$USER}
 hostKey=host:`hostname -s`
 hourlyMinute=${hourlyMinute:=0}
@@ -17,14 +17,14 @@ echo hour $hour
 echo minute $minute
 echo hourlyMinute $hourlyMinute
 echo dailyHour $dailyHour 
-echo serviceUrl $serviceUrl
+echo rquery $rquery
 echo keyspace $keyspace
 echo hostKey $hostKey
 echo hostDelay $hostDelay 
 echo timeString $timeString
 
 c1curl() {
-  url=$serviceUrl/ks/$keyspace/$1
+  url=$rquery/$uri/$1
   echo url $url 
   curl -s -k $url | python -mjson.tool
 }
