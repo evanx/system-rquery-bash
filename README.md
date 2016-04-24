@@ -5,9 +5,11 @@ Push system metrics into a Redis-based "rquery" instance via the cron.
 
 Currently only diskpace and load average are pushed, for illustration:
 ```shell
-  hset diskspace `df -h | grep '/$' | sed 's/\s\s*/ /g' | cut -d' ' -f5 | sed 's/\W//g'`
-  hset cpuload `cat /proc/loadavg | cut -d' ' -f1`
+  hset diskspace $diskspace
+  hset cpu $loadavg
 ```
+where these metrics are determined using `df` and `/proc/loadavg`
+
 which saves these metrics in an online Redis service, viz. `https://redishub.com/rquery` by default.
 
 The intended purpose is for custom monitoring and alerting. However that functionality will be provided by other microservices, i.e. to aggregate and monitor the metrics of all hosts pushed by this service.
@@ -75,7 +77,7 @@ curl -s $rquery/hgetall/host:`hostname -s` | python -mjson.tool
 ```
 
 ```json
-cpuload=1.23
+loadavg=1.23
 diskspace=19
 ```
 
