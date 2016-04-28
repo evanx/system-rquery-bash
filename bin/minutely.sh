@@ -34,7 +34,7 @@ c1curlq() {
 }
 
 c1curlp() {
-  c1curl $1?nplain
+  c1curl $1?line
 }
 
 c0state() {
