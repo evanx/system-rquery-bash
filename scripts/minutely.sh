@@ -1,4 +1,6 @@
 
+exit 0 
+
 set -u -e 
 
 hour=`date +%H`

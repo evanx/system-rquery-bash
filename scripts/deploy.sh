@@ -1,6 +1,8 @@
 
 set -u -e 
 
+rquery=${rquery:=https://clisecure.redishub.com}
+
 echo rquery $rquery 
 
 for host in $@
